@@ -1,0 +1,41 @@
+@startuml diagrama_erd
+' === Database Diagram ===
+entity User {
+  +id: INT [PK]
+  +name: VARCHAR(100)
+  +email: VARCHAR(100)
+  +password: VARCHAR(255)
+  +role: ENUM('admin', 'support', 'user')
+}
+
+entity Ticket {
+  +id: INT [PK]
++category_id [FK]
+  +title: VARCHAR(255)
+  +description: TEXT(500)
+  +status: ENUM('open', 'in_progress', 'resolved', 'closed')
++priority: ENUM('low', 'medium', 'high')
+  +opened_at: DATETIME()
+  +closed_at: DATETIME()
+  +user_id: INT [FK]
+}
+
+entity Category {
+  +id: INT [PK]
+  +name: VARCHAR(100)
+}
+
+entity Responses {
+  +id: INT [PK]
+  +message: TEXT(500)
+  +date: DATETIME()
+  +user_id: INT [FK]
+  +ticket_id: INT [FK]
+}
+
+' Relationships
+User ||--o{ Ticket : "opens"
+User ||--o{ Responses : "sends"
+Ticket ||--o{ Responses : "has"
+Ticket }o--|| Category : "belongs to"
+@enduml
